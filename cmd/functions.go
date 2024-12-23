@@ -21,6 +21,8 @@ func createNewProject(projectName, projectPath string) {
 
   fmt.Printf("Creating project: %s\n", projectName)
 
+  introduce(projectName)
+
   globalPath := filepath.Join(projectPath, projectName)
 
   if _, err := os.Stat(globalPath); err == nil {
