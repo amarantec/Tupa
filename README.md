@@ -25,24 +25,24 @@ Tupã é um framework leve e eficiente projetado para criar a estrutura de proje
 Ao usar o Tupã para criar um novo projeto, a estrutura gerada será semelhante a esta:
 
 app/
-│
-├── cmd/ # Comandos da CLI
-│ ├── api/ # API do projeto
-│ │ └── main.go # Ponto de entrada da aplicação
-│
-├── internal/ # Lógica interna da aplicação
-│ ├── db/ # Lógica de banco de dados
-│ │ └── db.go # Funções para manipulação do banco de dados
-│ ├── handler/ # Handlers HTTP
-│ │ ├── routes/ # Configuração das rotas
-│ │ │ └── routes.go # Definições das rotas
-│ │ └── middleware/ # Middleware da aplicação
-│ │ └── middleware.go # Funções middleware
-│ └── model.go # Definição dos modelos
-│
-├── web/ # Diretório para arquivos web
-│ ├── templates/ # Templates HTML
-│ │ ├── form.html # Template para adicionar modelos
-│ │ └── list.html # Template para listar modelos
-│ └── css/ # Arquivos CSS
-│ └── style.css # Estilos da aplicação
+|
+|-- cmd/ # Comandos da CLI & API
+| |-- api/ # API do projeto
+| | +-- main.go # Ponto de entrada da aplicação
+|
+|-- internal/ # Lógica interna da aplicação
+| |-- db/ # Lógica de banco de dados
+| | +-- db.go # Funções para manipulação do banco de dados
+| |-- handler/ # Handlers HTTP
+| | |-- routes/ # Configuração das rotas
+| | | +-- routes.go # Definições das rotas
+| | |-- middleware/ # Middleware da aplicação
+| | +-- middleware.go # Funções middleware
+| |-- model.go # Definição dos modelos
+|
+|-- web/ # Diretório para arquivos web
+| |-- templates/ # Templates HTML
+| | +-- form.html # Template para adicionar modelos
+| | +-- list.html # Template para listar modelos
+| |-- css/ # Arquivos CSS
+| |-- style.css # Estilos da aplicação
