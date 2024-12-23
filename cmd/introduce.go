@@ -30,5 +30,6 @@ func introduce(projectName string) {
     fmt.Println()
     fmt.Println("Para começar a desenvolver, execute o comando 'go mod tidy' para baixar as dependências necessárias.")
     fmt.Println("Depois, você pode iniciar a aplicação com 'go run cmd/api/main.go'.")
+    fmt.Println("Ou Pode compilar o projeto com 'go build -o app cmd/api/main.go' e executar com ./app")
 }
 
