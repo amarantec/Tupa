@@ -1,24 +1,46 @@
-/*
-Copyright © 2024 NAME HERE <EMAIL ADDRESS>
-
-*/
 package cmd
 
 import (
+	"fmt"
 	"os"
 
+	"github.com/amarantec/tupa/cmd/generate"
+	"github.com/amarantec/tupa/cmd/model"
 	"github.com/spf13/cobra"
 )
 
 var projectName string
 var projectPath string
+var args string
 
 var createCmd = &cobra.Command{
-    Use:   "create",
-    Short: "Cria o esqueleto de um novo projeto web",
-    Run: func(cmd *cobra.Command, args []string) {
-      createNewProject(projectName, projectPath) 
-  },
+	Use:   "create",
+	Short: "Creates the skeleton of a new web project",
+	Run: func(cmd *cobra.Command, args []string) {
+		createNewProject(projectName, projectPath)
+	},
+}
+
+var newModel = &cobra.Command{
+	Use:   "model",
+	Short: "Creates a new model/struct in internal directory",
+	Run: func(cmd *cobra.Command, args []string) {
+		if err := model.ModelNewStruct(args); err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
+	},
+}
+
+var generateModel = &cobra.Command{
+	Use:   "generate",
+	Short: "Generate a complete model with CRUD operations and an html template",
+	Run: func(cmd *cobra.Command, args []string) {
+		if err := generate.GenerateNewModel(args); err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
+	},
 }
 
 // rootCmd represents the base command when called without any subcommands
@@ -31,13 +53,8 @@ examples and usage of using your application. For example:
 Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
-	// Uncomment the following line if your bare application
-	// has an action associated with it:
-	// Run: func(cmd *cobra.Command, args []string) { },
 }
 
-// Execute adds all child commands to the root command and sets flags appropriately.
-// This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
 	err := rootCmd.Execute()
 	if err != nil {
@@ -46,18 +63,13 @@ func Execute() {
 }
 
 func init() {
-	// Here you will define your flags and configuration settings.
-	// Cobra supports persistent flags, which, if defined here,
-	// will be global for your application.
-
-	// rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.tupa.yaml)")
-
-	// Cobra also supports local flags, which will only run
-	// when this action is called directly.
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
-  rootCmd.AddCommand(createCmd)
-  createCmd.Flags().StringVarP(&projectName, "name", "n", "", "Project Name")
-  createCmd.Flags().StringVarP(&projectPath, "path", "p", ".", "Path where project will be created")
+	rootCmd.AddCommand(createCmd)
+	rootCmd.AddCommand(newModel)
+	rootCmd.AddCommand(generateModel)
+
+	createCmd.Flags().StringVarP(&projectName, "name", "n", "", "Project Name")
+	createCmd.Flags().StringVarP(&projectPath, "path", "p", ".", "Path where project will be created")
+	newModel.Flags().StringVarP(&args, "name", "n", "", "Model Name")
+
 }
-
-
