@@ -10,7 +10,7 @@ import (
 	"github.com/amarantec/tupa/cmd/generate"
 )
 
-func createNewProject(projectName, projectPath string) {
+func createNewProject(projectName, projectPath, dbDrive string) {
 	if projectName == "" {
 		fmt.Println("You must provide a name for the project.")
 		return
@@ -56,6 +56,11 @@ func createNewProject(projectName, projectPath string) {
 
 	cmdPath := filepath.Join(globalPath, "cmd")
 	if err := os.Mkdir(cmdPath, os.ModePerm); err != nil {
+		log.Fatal(err)
+	}
+
+	configPath := filepath.Join(globalPath, "config")
+	if err := os.Mkdir(configPath, os.ModePerm); err != nil {
 		log.Fatal(err)
 	}
 
@@ -116,7 +121,7 @@ func createNewProject(projectName, projectPath string) {
 	}
 	defer mainFile.Close()
 
-	if err := generate.WriteMainFile(mainPath, projectName); err != nil {
+	if err := generate.WriteMainFile(mainPath, projectName, dbDrive); err != nil {
 		log.Fatal(err)
 	}
 
@@ -131,58 +136,25 @@ func createNewProject(projectName, projectPath string) {
 		log.Fatal(err)
 	}
 
-	modelFilePath := filepath.Join(internalPath, "model.go")
-	modelFile, err := os.Create(modelFilePath)
+	handlerFilePath := filepath.Join(handlerPath, "handler.go")
+	handlerFile, err := os.Create(handlerFilePath)
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer modelFile.Close()
+	defer handlerFile.Close()
 
-	if err := generate.WriteModelFile(modelFilePath, projectName); err != nil {
+	if err := generate.WriteIndexHandlerFile(handlerFilePath); err != nil {
 		log.Fatal(err)
 	}
 
-	modelHandlerPath := filepath.Join(handlerPath, "model_handler.go")
-	modelHandlerFile, err := os.Create(modelHandlerPath)
+	indexTemplateFilePath := filepath.Join(templatesWeb, "index.html")
+	indexTemplateFile, err := os.Create(indexTemplateFilePath)
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer modelHandlerFile.Close()
+	defer indexTemplateFile.Close()
 
-	if err := generate.WriteModelHandlerFile(modelHandlerPath, projectName); err != nil {
-		log.Fatal(err)
-	}
-
-	dbFilePath := filepath.Join(databasePath, "db.go")
-	dbFile, err := os.Create(dbFilePath)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer dbFile.Close()
-
-	if err := generate.WriteDbFile(dbFilePath, projectName); err != nil {
-		log.Fatal(err)
-	}
-
-	createModelTemplateFilePath := filepath.Join(templatesWeb, "create-model-template.html")
-	createModelTemplateFile, err := os.Create(createModelTemplateFilePath)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer createModelTemplateFile.Close()
-
-	if err := generate.WriteCreateModelTemplateFile(createModelTemplateFilePath, projectName); err != nil {
-		log.Fatal(err)
-	}
-
-	listModelTemplateFilePath := filepath.Join(templatesWeb, "list-model-template.html")
-	listModelTemplateFile, err := os.Create(listModelTemplateFilePath)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer listModelTemplateFile.Close()
-
-	if err := generate.WriteListModelTemplateFile(listModelTemplateFilePath, projectName); err != nil {
+	if err := generate.WriteIndexTemplateFile(indexTemplateFilePath); err != nil {
 		log.Fatal(err)
 	}
 
@@ -207,4 +179,27 @@ func createNewProject(projectName, projectPath string) {
 	if err := generate.WriteBuildFile(buildFilePath); err != nil {
 		log.Fatal(err)
 	}
+
+	envFilePath := filepath.Join(configPath, ".env")
+	envFile, err := os.Create(envFilePath)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer envFile.Close()
+
+	if err := generate.WriteEnvFile(envFilePath, dbDrive); err != nil {
+		log.Fatal(err)
+	}
+
+	dbFilePath := filepath.Join(databasePath, "db.go")
+	dbFile, err := os.Create(dbFilePath)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer dbFile.Close()
+
+	if err := generate.WriteDbFile(dbFilePath, projectName, dbDrive); err != nil {
+		log.Fatal(err)
+	}
+
 }
