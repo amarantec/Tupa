@@ -10,9 +10,9 @@ func WriteBuildFile(buildFilePath string) error {
 	*/
 
 	packageContent := []byte(`#!/usr/bin/env sh
-	go mod tidy
-	CGO_ENABLED=1 go build -o app ./cmd/api/main.go
-	./app
+go mod tidy
+CGO_ENABLED=1 go build -o app ./cmd/api/main.go
+./app
 	`)
 
 	buildFile, err := os.OpenFile(buildFilePath, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0666)
