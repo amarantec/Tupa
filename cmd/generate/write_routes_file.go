@@ -20,10 +20,7 @@ import(
 func SetRoutes() *http.ServeMux{
   m := http.NewServeMux()
 
-  m.HandleFunc("/create-new-model", handler.LoadCreateModelTemplate)
-  m.HandleFunc("/add", handler.Create)
-  m.HandleFunc("/list-all-models", handler.GetAll)
-  m.HandleFunc("/list", handler.ListModelsTemplate)
+  m.HandleFunc("/", handler.LoadIndexTemplate)
 
   return m
 }
