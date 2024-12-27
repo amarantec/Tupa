@@ -3,8 +3,31 @@ package model
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 	"strings"
 )
+
+func findProjectRoot() (string, error) {
+	// Caminha para encontrar o diretório que contém a pasta `internal`.
+	currentDir, err := os.Getwd()
+	if err != nil {
+		return "", fmt.Errorf("failed to get current directory: %w", err)
+	}
+
+	for {
+		if _, err := os.Stat(filepath.Join(currentDir, "internal")); err == nil {
+			return currentDir, nil
+		}
+
+		parentDir := filepath.Dir(currentDir)
+		if parentDir == currentDir {
+			break
+		}
+		currentDir = parentDir
+	}
+
+	return "", fmt.Errorf("project root not found")
+}
 
 func ModelNewStruct(args []string) error {
 	if len(args) < 2 {
@@ -18,7 +41,7 @@ func ModelNewStruct(args []string) error {
 	for _, field := range fields {
 		parts := strings.Split(field, ":")
 		if len(parts) != 2 {
-			return fmt.Errorf("invalid field formart: %s, expected <FieldName>:<Type>", field)
+			return fmt.Errorf("invalid field format: %s, expected <FieldName>:<Type>", field)
 		}
 
 		fieldName := parts[0]
@@ -29,9 +52,17 @@ func ModelNewStruct(args []string) error {
 	modelContent := fmt.Sprintf("package internal\n\ntype %s struct {\n  %s\n}\n",
 		modelName, strings.Join(fieldDefinitions, "\n  "))
 
-	filePath := fmt.Sprintf("internal/%s.go", strings.ToLower(modelName))
+	// Localiza o diretório raiz do projeto.
+	projectRoot, err := findProjectRoot()
+	if err != nil {
+		return err
+	}
 
-	file, err := os.OpenFile(filePath, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0666)
+	// Constrói o caminho para o arquivo.
+	modelFilePath := filepath.Join(projectRoot, "internal", fmt.Sprintf("%s.go", strings.ToLower(modelName)))
+
+	// Cria o arquivo de modelo.
+	file, err := os.OpenFile(modelFilePath, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0666)
 	if err != nil {
 		return err
 	}
@@ -41,7 +72,5 @@ func ModelNewStruct(args []string) error {
 	if err != nil {
 		return err
 	}
-
-	fmt.Printf("Model %s created successfully at: %s\n", modelName, filePath)
 	return nil
 }
