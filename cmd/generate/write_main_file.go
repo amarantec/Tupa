@@ -5,43 +5,22 @@ import (
 	"os"
 )
 
-func WriteMainFile(mainPath, moduleName string) error {
+func WriteMainFile(mainPath, moduleName, dbDrive string) error {
 	/*
 	   Code to write in main.go
 	*/
 
-	packageContent := fmt.Sprintf(`package main
-
-import ( 
-  "fmt"
-  "log"
-  "net/http"
-  "time"
-  "%s/internal/db"
-  "%s/internal/handler"
-  "%s/internal/handler/routes"
-)
-
-func main() {
-  db.InitDB()
-  
-  handler.LoadTemplates()
-  mux := routes.SetRoutes()
-  mux.Handle("/css/",
-    http.StripPrefix("/css/",
-      http.FileServer(http.Dir("../../web/css"))))
-
-  server := &http.Server{
-    Addr:         "127.0.0.1:8080",
-    Handler:      mux,
-    ReadTimeout:  10 * time.Second,
-    WriteTimeout: 10 * time.Second,
-  }
-
-  fmt.Println("Server listen on: http://" + server.Addr)
-  log.Fatal(server.ListenAndServe())
-}
-`, moduleName, moduleName, moduleName)
+	var packageContent string
+	if dbDrive == "sqlite3" || dbDrive == "" {
+		packageContent = fmt.Sprintf(mainFilePackageContentWithSqlite, moduleName, moduleName, moduleName)
+	} else if dbDrive == "postgres" {
+		packageContent = fmt.Sprintf(mainFilePackageContentWithPostgres, moduleName, moduleName, moduleName)
+	} else if dbDrive == "mysql" {
+		packageContent = fmt.Sprintf(mainFilePackageContentWithMySql, moduleName, moduleName, moduleName, moduleName)
+	} else {
+		fmt.Println("Unsupported database driver: " + dbDrive)
+		os.Exit(1)
+	}
 
 	mainFile, err := os.OpenFile(mainPath, os.O_WRONLY|os.O_APPEND, 0666)
 	if err != nil {
