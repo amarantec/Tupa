@@ -11,13 +11,14 @@ import (
 
 var projectName string
 var projectPath string
+var dbDrive string
 var args string
 
 var createCmd = &cobra.Command{
 	Use:   "create",
 	Short: "Creates the skeleton of a new web project",
 	Run: func(cmd *cobra.Command, args []string) {
-		createNewProject(projectName, projectPath)
+		createNewProject(projectName, projectPath, dbDrive)
 	},
 }
 
@@ -48,11 +49,11 @@ var rootCmd = &cobra.Command{
 	Use:   "tupa",
 	Short: "A brief description of your application",
 	Long: `A longer description that spans multiple lines and likely contains
-examples and usage of using your application. For example:
+	examples and usage of using your application. For example:
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Cobra is a CLI library for Go that empowers applications.
+	This application is a tool to generate the needed files
+	to quickly create a Cobra application.`,
 }
 
 func Execute() {
@@ -70,6 +71,7 @@ func init() {
 
 	createCmd.Flags().StringVarP(&projectName, "name", "n", "", "Project Name")
 	createCmd.Flags().StringVarP(&projectPath, "path", "p", ".", "Path where project will be created")
+	createCmd.Flags().StringVarP(&dbDrive, "driver", "d", "", "Database driver which will be used")
 	newModel.Flags().StringVarP(&args, "name", "n", "", "Model Name")
 
 }
