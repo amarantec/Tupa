@@ -7,15 +7,15 @@ func WriteDockerfileFile(dockerFilePath string) error {
 		Code to write in Dockerfile
 	*/
 
-	packageContent := []byte(`FROM docker.io/librart/golang:1.23.4-alpine
+	packageContent := []byte(`FROM docker.io/library/golang:1.23.4-alpine
 
 WORKDIR /app
-	
+
+RUN go mod tidy
+
 COPY ../go.mod ./
 COPY ../go.sum ./
 COPY ../config/.env ../../config/
-
-RUN go mod tidy
 
 COPY ../. /app/
 
