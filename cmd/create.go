@@ -110,6 +110,11 @@ func createNewProject(projectName, projectPath, dbDrive string) {
 		log.Fatal(err)
 	}
 
+	deploymentPath := filepath.Join(globalPath, "deployment")
+	if err := os.Mkdir(deploymentPath, os.ModePerm); err != nil {
+		log.Fatal(err)
+	}
+
 	/*
 	   Create files
 	*/
@@ -202,4 +207,14 @@ func createNewProject(projectName, projectPath, dbDrive string) {
 		log.Fatal(err)
 	}
 
+	dockerFilePath := filepath.Join(deploymentPath, "Dockerfile")
+	dockerFile, err := os.Create(dockerFilePath)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer dockerFile.Close()
+
+	if err := generate.WriteDockerfileFile(dockerFilePath); err != nil {
+		log.Fatal(err)
+	}
 }
