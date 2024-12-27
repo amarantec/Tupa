@@ -5,45 +5,23 @@ import (
 	"os"
 )
 
-func WriteDbFile(dbFilePath, moduleName string) error {
+func WriteDbFile(dbFilePath, moduleName, dbDrive string) error {
 	/*
 	   Code to write in db.go
 	*/
 
-	packageContent := fmt.Sprintf(`package db
+	var packageContent string
 
-import (
-  "database/sql"
-  "fmt"
-  _"github.com/mattn/go-sqlite3"
-)
-
-var DB *sql.DB
-
-func InitDB() {
- var err error
- DB, err = sql.Open("sqlite3", "api.db")
-  if err != nil {
-    panic("Could not connect to dabase.")
-  }
-
-  DB.SetMaxOpenConns(10)
-  DB.SetMaxIdleConns(5)
-  createTables()
-}
-
-/*
-  Function to create a "model" table for example when running the project for the first time.
-*/
-func createTables() {
-  create%sTable := " CREATE TABLE IF NOT EXISTS %ss (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL, body TEXT NOT NULL);"
-  _, err := DB.Exec(create%sTable)
-  if err != nil {
-    fmt.Println(err)
-    panic("Could not create %ss table.")
-  }
-}
-`, moduleName, moduleName, moduleName, moduleName)
+	if dbDrive == "postgres" {
+		packageContent = postgresDatabasePackageContent
+	} else if dbDrive == "mysql" {
+		packageContent = mysqlDatabasePackageContent
+	} else if dbDrive == "" || dbDrive == "sqlite3" {
+		packageContent = sqlite3DatabasePackageContent
+	} else {
+		fmt.Println("Unsupported database driver: " + dbDrive)
+		os.Exit(1)
+	}
 
 	dbFile, err := os.OpenFile(dbFilePath, os.O_WRONLY|os.O_APPEND, 0666)
 	if err != nil {
