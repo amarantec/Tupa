@@ -41,9 +41,6 @@ func main() {
 
 	handler.LoadTemplates()
   	mux := routes.SetRoutes()
-  	mux.Handle("/css/",
-    	http.StripPrefix("/css/",
-      		http.FileServer(http.Dir("../../web/css"))))
 
 	server := &http.Server{
 		Addr:    		"127.0.0.1:8080",
@@ -79,9 +76,6 @@ func main() {
 	db.OpenConnection()
 	handler.LoadTemplates()
   	mux := routes.SetRoutes()
-  	mux.Handle("/css/",
-    	http.StripPrefix("/css/",
-      		http.FileServer(http.Dir("../../web/css"))))
 
   	server := &http.Server{
     	Addr:         "127.0.0.1:8080",
@@ -135,9 +129,6 @@ func main() {
 
 	handler.LoadTemplates()
 	mux := routes.SetRoutes()
-	mux.Handle("/css/",
-		http.StripPrefix("/css/",
-			http.FileServer(http.Dir("../../web/css"))))
 
 	server := &http.Server{
 		Addr:         "127.0.0.1:8080",
