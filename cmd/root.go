@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/amarantec/tupa/cmd/generate"
-	"github.com/amarantec/tupa/cmd/model"
 	"github.com/spf13/cobra"
 )
 
@@ -26,7 +24,7 @@ var newModel = &cobra.Command{
 	Use:   "model",
 	Short: "Creates a new model/struct in internal directory",
 	Run: func(cmd *cobra.Command, args []string) {
-		if err := model.ModelNewStruct(args); err != nil {
+		if err := modelNewStruct(args); err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
@@ -37,7 +35,7 @@ var generateModel = &cobra.Command{
 	Use:   "generate",
 	Short: "Generate a complete model with CRUD operations and an html template",
 	Run: func(cmd *cobra.Command, args []string) {
-		if err := generate.GenerateNewModel(args); err != nil {
+		if err := generateNewModel(args); err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
@@ -73,5 +71,5 @@ func init() {
 	createCmd.Flags().StringVarP(&projectPath, "path", "p", ".", "Path where project will be created")
 	createCmd.Flags().StringVarP(&dbDrive, "driver", "d", "", "Database driver which will be used")
 	newModel.Flags().StringVarP(&args, "name", "n", "", "Model Name")
-
+	generateModel.Flags().StringVarP(&args, "name", "n", "", "Model Name")
 }
