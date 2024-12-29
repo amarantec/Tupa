@@ -60,7 +60,7 @@ func OpenConnection(ctx context.Context, connectionString string) (*sql.DB, erro
 
 import (
 	"database/sql"
-	"github.com/mattn/go-sqlite3"
+	_"github.com/mattn/go-sqlite3"
 )
 
 var DB *sql.DB
