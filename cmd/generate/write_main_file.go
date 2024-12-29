@@ -18,8 +18,7 @@ func WriteMainFile(mainPath, moduleName, dbDrive string) error {
 	} else if dbDrive == "mysql" {
 		packageContent = fmt.Sprintf(mainFilePackageContentWithMySql, moduleName, moduleName, moduleName, moduleName)
 	} else {
-		fmt.Println("Unsupported database driver: " + dbDrive)
-		os.Exit(1)
+		return fmt.Errorf("unsupported database driver: %s", dbDrive)
 	}
 
 	mainFile, err := os.OpenFile(mainPath, os.O_WRONLY|os.O_APPEND, 0666)
