@@ -22,6 +22,10 @@ func SetRoutes() *http.ServeMux{
 
   m.HandleFunc("/", handler.LoadIndexTemplate)
 
+
+  m.Handle("/css/",
+	http.StripPrefix("/css/",
+		http.FileServer(http.Dir("web/css"))))
   return m
 }
 `, moduleName)
