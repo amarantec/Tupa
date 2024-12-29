@@ -9,23 +9,23 @@ func WriteEnvFile(envFilePath, dbDrive string) error {
 	var config string
 
 	if dbDrive == "postgres" {
-		config = `
-		DB_HOST=localhost
-		DB_PORT=5432
-		POSTGRES_USER=postgres_user
-		POSTGRES_PASSWORD=postgres_password
-		POSTGRES_DB=app_development
-		`
+		config = `DB_HOST=localhost
+DB_PORT=5432
+POSTGRES_USER=postgres_user
+POSTGRES_PASSWORD=postgres_password
+POSTGRES_DB=app_development
+DB_DRIVER=postgres
+`
 	} else if dbDrive == "mysql" {
-		config = `
-		DB_HOST=localhost
-		DB_PORT=3306
-		MYSQL_USER=mysql_user
-		MYSQL_PASSWORD=mysql_password
-		MYSQL_DATABASE=app_development
-		`
+		config = `DB_HOST=localhost
+DB_PORT=3306
+MYSQL_USER=mysql_user
+MYSQL_PASSWORD=mysql_password
+MYSQL_DATABASE=app_development
+DB_DRIVER=mysql
+`
 	} else if dbDrive == "" || dbDrive == "sqlite3" {
-		config = ""
+		config = "DB_DRIVER=sqlite3"
 	} else {
 		fmt.Println("Unsupported database driver: " + dbDrive)
 		os.Exit(1)
