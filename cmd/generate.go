@@ -39,7 +39,6 @@ func generateNewModel(args []string) error {
 
 	modelPath := filepath.Join(internalPath, modelName)
 	if err := os.Mkdir(modelPath, os.ModePerm); err != nil {
-		fmt.Println(err)
 		log.Fatal(err)
 	}
 
@@ -87,6 +86,11 @@ func generateNewModel(args []string) error {
 	defer modelHandlerFile.Close()
 
 	if err := generate.GenerateModelHandlerFile(modelHandlerPath, modelName, projectName); err != nil {
+		log.Fatal(err)
+	}
+
+	migrationsPath := filepath.Join(internalPath, "migrations")
+	if err := os.Mkdir(migrationsPath, os.ModePerm); err != nil {
 		log.Fatal(err)
 	}
 
