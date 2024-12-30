@@ -11,6 +11,7 @@ var projectName string
 var projectPath string
 var dbDrive string
 var args string
+var applyMigrations bool
 
 var createCmd = &cobra.Command{
 	Use:   "create",
@@ -42,6 +43,25 @@ var generateModel = &cobra.Command{
 	},
 }
 
+var migration = &cobra.Command{
+	Use:   "migration",
+	Short: "Performs migration operations in database",
+	Run: func(cmd *cobra.Command, args []string) {
+		if applyMigrations {
+			fmt.Println("Applying migrations...")
+
+			if err := ApplyMigrations(); err != nil {
+				fmt.Printf("error when applying migrations: %v", err)
+				os.Exit(1)
+			}
+
+			fmt.Println("Migrations applied successfully")
+		} else {
+			fmt.Println("Please use the --apply flag to apply the migrations")
+		}
+	},
+}
+
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "tupa",
@@ -66,10 +86,12 @@ func init() {
 	rootCmd.AddCommand(createCmd)
 	rootCmd.AddCommand(newModel)
 	rootCmd.AddCommand(generateModel)
+	rootCmd.AddCommand(migration)
 
 	createCmd.Flags().StringVarP(&projectName, "name", "n", "", "Project Name")
 	createCmd.Flags().StringVarP(&projectPath, "path", "p", ".", "Path where project will be created")
 	createCmd.Flags().StringVarP(&dbDrive, "driver", "d", "", "Database driver which will be used")
 	newModel.Flags().StringVarP(&args, "name", "n", "", "Model Name")
 	generateModel.Flags().StringVarP(&args, "name", "n", "", "Model Name")
+	migration.Flags().BoolVarP(&applyMigrations, "apply", "a", false, "Apply migrations to the database")
 }
