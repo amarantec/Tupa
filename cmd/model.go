@@ -26,6 +26,22 @@ func modelNewStruct(args []string) error {
 
 		fieldName := parts[0]
 		fieldType := parts[1]
+		var goType string
+
+		switch fieldType {
+		case "key", "int":
+			goType = "int64"
+			fieldType = goType
+		case "string":
+			goType = "string"
+			fieldType = goType
+		case "text":
+			goType = "string"
+			fieldType = goType
+		default:
+			return fmt.Errorf("unsupported field type: %s", fieldType)
+		}
+
 		fieldDefinitions = append(fieldDefinitions, fmt.Sprintf("%s    %s", fieldName, strings.ToLower(fieldType)))
 	}
 
