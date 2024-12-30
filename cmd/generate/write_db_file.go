@@ -3,6 +3,8 @@ package generate
 import (
 	"fmt"
 	"os"
+
+	"github.com/amarantec/tupa/constants"
 )
 
 func WriteDbFile(dbFilePath, moduleName, dbDrive string) error {
@@ -16,7 +18,7 @@ func WriteDbFile(dbFilePath, moduleName, dbDrive string) error {
 		packageContent = postgresDatabasePackageContent
 	} else if dbDrive == "mysql" {
 		packageContent = mysqlDatabasePackageContent
-	} else if dbDrive == "" || dbDrive == "sqlite3" {
+	} else if dbDrive == constants.EMPTY_STRING || dbDrive == "sqlite3" {
 		packageContent = sqlite3DatabasePackageContent
 	} else {
 		fmt.Println("Unsupported database driver: " + dbDrive)

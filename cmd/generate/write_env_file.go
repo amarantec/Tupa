@@ -3,6 +3,8 @@ package generate
 import (
 	"fmt"
 	"os"
+
+	"github.com/amarantec/tupa/constants"
 )
 
 func WriteEnvFile(envFilePath, dbDrive string) error {
@@ -24,8 +26,9 @@ MYSQL_PASSWORD=mysql_password
 MYSQL_DATABASE=app_development
 DB_DRIVER=mysql
 `
-	} else if dbDrive == "" || dbDrive == "sqlite3" {
-		config = "DB_DRIVER=sqlite3"
+	} else if dbDrive == constants.EMPTY_STRING || dbDrive == "sqlite3" {
+		config = `DB_DRIVER=sqlite3
+DB_NAME=app.db`
 	} else {
 		fmt.Println("Unsupported database driver: " + dbDrive)
 		os.Exit(1)

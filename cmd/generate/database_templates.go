@@ -67,7 +67,7 @@ var DB *sql.DB
 
 func OpenConnection() {
 	var err error
-	DB, err = sql.Open("sqlite3", "api.db")
+	DB, err = sql.Open("sqlite3", "app.db")
 	if err != nil {
 		panic("Could not connect to dabase.")
 	}
