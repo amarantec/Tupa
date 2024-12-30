@@ -4,12 +4,23 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"path/filepath"
 	"strings"
+
+	"github.com/amarantec/tupa/constants"
 )
 
 // LoadProjectNameFromGoMod reads the project name (module name) from the go.mod file.
 func LoadProjectNameFromGoMod() (string, error) {
-	goModPath := "go.mod" // Assuming go.mod is in the project root
+	currentDir, err := os.Getwd()
+	if err != nil {
+		return constants.EMPTY_STRING, err
+	}
+
+	goModPath, err := findGoMod(currentDir)
+	if err != nil {
+		return constants.EMPTY_STRING, err
+	}
 
 	file, err := os.Open(goModPath)
 	if err != nil {
@@ -30,4 +41,26 @@ func LoadProjectNameFromGoMod() (string, error) {
 	}
 
 	return "", fmt.Errorf("module declaration not found in go.mod")
+}
+
+func findGoMod(startDir string) (string, error) {
+	currentDir := startDir
+
+	for {
+		// Caminho completo para o possível arquivo go.mod
+		goModPath := filepath.Join(currentDir, "go.mod")
+		if _, err := os.Stat(goModPath); err == nil {
+			return goModPath, nil
+		}
+
+		// Move para o diretório pai
+		parentDir := filepath.Dir(currentDir)
+		if parentDir == currentDir {
+			// Se chegarmos na raiz do sistema e não encontramos go.mod
+			break
+		}
+		currentDir = parentDir
+	}
+
+	return constants.EMPTY_STRING, fmt.Errorf("go.mod not found starting from %s", startDir)
 }

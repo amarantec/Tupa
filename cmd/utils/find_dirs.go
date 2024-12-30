@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+
+	"github.com/amarantec/tupa/constants"
 )
 
 func FindProjectInternal() (string, error) {
@@ -52,7 +54,7 @@ func FindProjectHandler() (string, error) {
 func FindEnvFile() (string, error) {
 	currentDir, err := os.Getwd()
 	if err != nil {
-		return "", fmt.Errorf("failed to get current directory: %w", err)
+		return constants.EMPTY_STRING, fmt.Errorf("failed to get current directory: %w", err)
 	}
 
 	for {
@@ -67,5 +69,5 @@ func FindEnvFile() (string, error) {
 		}
 		currentDir = parentDir
 	}
-	return "", fmt.Errorf(".env file not found in config directory")
+	return constants.EMPTY_STRING, fmt.Errorf(".env file not found in config directory")
 }
