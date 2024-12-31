@@ -8,5 +8,5 @@ const (
 	SERVICE_SUFFIX    = "_service.go"
 	REPOSITORY_SUFFIX = "_repository.go"
 	HANDLER_SUFFIX    = "_handler.go"
-	USAGE_MESSAGE     = "usage: tupa generate -n <ModelName> <Field:Type> <Field:Type>"
+	USAGE_MESSAGE     = "usage: tupa generate <ModelName> <Field:Type> <Field:Type>"
 )
