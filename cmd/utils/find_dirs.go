@@ -51,6 +51,27 @@ func FindProjectHandler() (string, error) {
 	return "", fmt.Errorf("handler dir not found")
 }
 
+func FindWebDirectory() (string, error) {
+	currentDir, err := os.Getwd()
+	if err != nil {
+		return constants.EMPTY_STRING, fmt.Errorf("failed to get current directory: %w", err)
+	}
+
+	for {
+		webPath := filepath.Join(currentDir, "web")
+		if _, err := os.Stat(webPath); err == nil {
+			return webPath, nil
+		}
+
+		parentDir := filepath.Dir(currentDir)
+		if parentDir == currentDir {
+			break
+		}
+		currentDir = parentDir
+	}
+	return constants.EMPTY_STRING, fmt.Errorf("web dir not found")
+}
+
 func FindEnvFile() (string, error) {
 	currentDir, err := os.Getwd()
 	if err != nil {
