@@ -12,9 +12,9 @@ import (
 	"github.com/amarantec/tupa/constants"
 )
 
-// Constantes para valores padrão
+// Constantes para valores padrao
 
-// Função para gerar um novo modelo
+// Funcao para gerar um novo modelo
 func generateNewModel(args []string) error {
 	if len(args) < 2 {
 		fmt.Println(args)
@@ -26,8 +26,14 @@ func generateNewModel(args []string) error {
 		return err
 	}
 
-	// Variáveis de configuração
+	// Variaveis de configuracao
 	modelName := args[0]
+	fields := args[1:]
+
+	if err := GenerateModelWebHTML(modelName, fields); err != nil {
+		return err
+	}
+
 	internalPath, err := utils.FindProjectInternal()
 	if err != nil {
 		return err
@@ -43,7 +49,7 @@ func generateNewModel(args []string) error {
 		return err
 	}
 
-	// Caminho do modelo e criação do diretório
+	// Caminho do modelo e cricao do diretorio
 	modelPath := filepath.Join(internalPath, modelName)
 	if err := os.Mkdir(modelPath, os.ModePerm); err != nil {
 		log.Fatal(err)
@@ -54,13 +60,13 @@ func generateNewModel(args []string) error {
 		log.Fatal(err)
 	}
 
-	// Gerar SQL para migração
+	// Gerar SQL para migracao
 	sql, err := GenerateSQLFromStruct(args, dbDriver)
 	if err != nil {
 		return fmt.Errorf("failed to generate SQL from struct: %w", err)
 	}
 
-	// Criar migração
+	// Criar migracao
 	if err := CreateMigrations(modelName, sql); err != nil {
 		return fmt.Errorf("failed to create migration: %w", err)
 	}
@@ -70,7 +76,7 @@ func generateNewModel(args []string) error {
 
 // Função auxiliar para gerar os arquivos do modelo
 func generateModelFiles(modelName, modelPath, projectName, dbDriver string) error {
-	// Gerar arquivo de serviço
+	// Gerar arquivo de servico
 	modelServiceFileName := strings.ToLower(modelName + constants.SERVICE_SUFFIX)
 	modelServicePath := filepath.Join(modelPath, modelServiceFileName)
 	modelServiceFile, err := os.Create(modelServicePath)
@@ -83,7 +89,7 @@ func generateModelFiles(modelName, modelPath, projectName, dbDriver string) erro
 		return err
 	}
 
-	// Gerar arquivo de repositório
+	// Gerar arquivo de repositorio
 	modelRepositoryFileName := strings.ToLower(modelName + constants.REPOSITORY_SUFFIX)
 	modelRepositoryPath := filepath.Join(modelPath, modelRepositoryFileName)
 	modelRepositoryFile, err := os.Create(modelRepositoryPath)
